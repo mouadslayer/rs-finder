@@ -11,8 +11,8 @@ jobs:
     runs-on: windows-latest
     env:
       PYTHON_VERSION: "3.10"
-      EXE_NAME: "rs_fr_lookup_v9.exe"
-      SCRIPT: "rs_fr_lookup_v9.py"
+      EXE_NAME: "rs_fr_lookup_v10.exe"
+      SCRIPT: "rs_fr_lookup_v10.py"
 
     steps:
       - name: Checkout repository
@@ -36,8 +36,8 @@ jobs:
 
       - name: Run build script (PyInstaller)
         run: |
-          # to bundle input.csv into the exe, uncomment -addData line below
-          powershell -ExecutionPolicy Bypass -File .\ci-build.ps1 -script "${{ env.SCRIPT }}" -outputName "${{ env.EXE_NAME }}" -addData "input.csv;."
+          # Do NOT bundle input.csv; the EXE will accept external input.csv at runtime
+          powershell -ExecutionPolicy Bypass -File .\ci-build.ps1 -script "${{ env.SCRIPT }}" -outputName "${{ env.EXE_NAME }}"
 
       - name: Upload exe artifact
         uses: actions/upload-artifact@v4
@@ -45,5 +45,5 @@ jobs:
           name: rs-fr-exe
           path: ${{ env.EXE_NAME }}
 
-      - name: Artifact list (for debugging)
+      - name: Show working dir
         run: dir
